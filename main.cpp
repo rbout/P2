@@ -31,7 +31,7 @@ class Params {
       directory    = "";
       output_file  = "";
 
-      // Flags
+      // Switches
       const char* const short_opts = "d:2:io:Rv";
       const option long_opts[7] = {
         {"d",       required_argument, 0, 'd'},
@@ -69,7 +69,7 @@ class Params {
         }
       };
       
-      Params::print();
+      print();
     }
 
     void print() {
