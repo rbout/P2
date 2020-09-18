@@ -10,10 +10,10 @@
 #include <getopt.h>
 #include <iostream>
 #include <string.h>
+#include <stdio.h>
 using namespace std;
 
 extern int opterr;
-// ofstream OutFile(output_file, ios::out | ios::app);
 
 class Params {
   private:
@@ -22,6 +22,7 @@ class Params {
     bool verbose;
     string directory;
     string output_file;
+    string search_text;
 
   public:
     Params(int argc, char* argv[]) {
@@ -30,6 +31,7 @@ class Params {
       verbose        = false;
       directory    = "";
       output_file  = "";
+      search_text  = "";
 
       // Switches
       const char* const short_opts = "d:2:io:Rv";
@@ -61,6 +63,7 @@ class Params {
             recursive = true;
             break;
           case 'o':
+            remove(optarg);
             output_file = string(optarg);
             break;
           case 'v':
@@ -68,20 +71,27 @@ class Params {
             break;
         }
       };
-      
+
+      // Non-option argument is the search text
+      search_text = string(argv[optind]);
       print();
     }
 
     void print() {
+      ofstream OutFile;
+      OutFile.open(output_file, ios::out | ios::app);
+
       if (!directory.empty()) {
-        cout << "Verbose? " << (verbose != 0 ? "Yes" : "No") << endl;
-        cout << "Case insensitive? " << (!case_sensitive ? "No" : "Yes") << endl;
-        cout << "Recursive? " << (recursive ? "Yes" : "No") << endl;
-        cout << "Output file name: " << (output_file.empty() ? "None" : output_file) << endl;
-        cout << "Directory: " << directory << endl;
+        OutFile << "Verbose? " << (verbose != 0 ? "Yes" : "No") << endl;
+        OutFile << "Case insensitive? " << (!case_sensitive ? "No" : "Yes") << endl;
+        OutFile << "Recursive? " << (recursive ? "Yes" : "No") << endl;
+        OutFile << "Output file name: " << (output_file.empty() ? "None" : output_file) << endl;
+        OutFile << "Directory: " << directory << endl;
       } else {
-        cout << "Directory path required. Exiting..." << endl;
+        OutFile << "Directory path required. Exiting..." << endl;
       }
+
+      OutFile.close();
     }
 };
 
